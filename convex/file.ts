@@ -15,7 +15,6 @@ export const generateUploadUrl = mutation(async ctx => {
 
 export async function hasAccessToOrg(ctx: QueryCtx | MutationCtx, orgId: string) {
 	const identity = await ctx.auth.getUserIdentity();
-
 	if (!identity) {
 		return null;
 	}
@@ -81,7 +80,7 @@ export const getFiles = query({
 		let files = await ctx.db
 			.query("files")
 			.withIndex("by_orgId", q => q.eq("orgId", args.orgId))
-			.collect()
+			.collect();
 
 		const query = args.query;
 
@@ -158,9 +157,10 @@ export const deleteFile = mutation({
 
 		assertCanDeleteFile(access.user, access.file);
 
-		await ctx.db.patch(args.fileId, {
-			shouldDelete: true,
-		});
+		await Promise.all([ctx.storage.delete(access.file.fileId), ctx.db.delete(access.file._id)]);
+		// await ctx.db.patch(args.fileId, {
+		// 	shouldDelete: true,
+		// });
 	},
 });
 

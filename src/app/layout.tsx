@@ -1,4 +1,5 @@
 import Header from "@/components/Header";
+import {Toaster} from "@/components/ui/toaster";
 import {ClerkProvider} from "@clerk/nextjs";
 import type {Metadata} from "next";
 import {Geist, Geist_Mono} from "next/font/google";
@@ -31,10 +32,11 @@ export default function RootLayout({
 	return (
 		<ClerkProvider>
 			<html lang="en" suppressHydrationWarning>
-				<body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+				<body className={`${geistSans.variable} ${geistMono.variable} antialiased `}>
 					<ConvexClientProvider>
 						<Header />
 						{children}
+						<Toaster />
 					</ConvexClientProvider>
 				</body>
 			</html>

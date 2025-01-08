@@ -6,3 +6,5 @@ export default {
 		},
 	],
 };
+
+export const domain = "https://in-cowbird-26.clerk.accounts.dev";
