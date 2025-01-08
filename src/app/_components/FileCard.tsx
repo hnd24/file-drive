@@ -21,9 +21,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {useToast} from "@/hooks/use-toast";
 import {AspectRatio} from "@radix-ui/react-aspect-ratio";
-import {useMutation} from "convex/react";
+import {useMutation, useQuery} from "convex/react";
 import {
-	ArchiveRestore,
 	EllipsisVertical,
 	FileTextIcon,
 	GanttChartIcon,
@@ -31,6 +30,7 @@ import {
 	StarIcon,
 	StarOff,
 	TrashIcon,
+	Undo2,
 } from "lucide-react";
 import Image from "next/image";
 import {ReactNode, Suspense, useState} from "react";
@@ -43,10 +43,12 @@ import {HoverCard, HoverCardContent, HoverCardTrigger} from "@/components/ui/hov
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip";
 import {Protect} from "@clerk/nextjs";
 import ImageFallback from "./ImageFallback";
+import ProfileUser from "./ProfileUser";
 
 const FileCardAction = ({file}: {file: filesTypes}) => {
 	const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 	const deleteFile = useMutation(api.file.deleteFile);
+
 	const toggleFavorite = useMutation(api.file.toggleFavorite);
 	const restoreFile = useMutation(api.file.restoreFile);
 	const toast = useToast();
@@ -114,7 +116,7 @@ const FileCardAction = ({file}: {file: filesTypes}) => {
 									}}>
 									Restore
 									<DropdownMenuShortcut>
-										<ArchiveRestore className="size-4 relative -top-0.5" />
+										<Undo2 className="size-4 relative -top-0.5" />
 									</DropdownMenuShortcut>
 								</DropdownMenuItem>
 							) : (
@@ -142,6 +144,7 @@ export const typesIcon = {
 } as Record<Doc<"files">["type"], ReactNode>;
 
 export function FileCard(file: filesTypes) {
+	const userProfile = useQuery(api.users.getUserProfile, {userId: file.userId});
 	return (
 		<Card>
 			<CardHeader className="relative px-2 pb-2">
@@ -219,14 +222,18 @@ export function FileCard(file: filesTypes) {
 					)}
 				</div>
 			</CardContent>
-			<CardFooter className="p-2">
+			<CardFooter className="p-2 flex justify-between items-center">
 				<Button
-					className="mx-auto"
 					onClick={() => {
 						window.open(file.url || "https://www.google.com.vn/", "_blank");
 					}}>
 					Download
 				</Button>
+				<ProfileUser
+					name={userProfile?.name || "CN"}
+					imageURL={userProfile?.image || "https://github.com/shadcn.png"}
+					timeCreate={file._creationTime}
+				/>
 			</CardFooter>
 		</Card>
 	);
