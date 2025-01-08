@@ -15,19 +15,28 @@ import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
+	DropdownMenuSeparator,
 	DropdownMenuShortcut,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {useToast} from "@/hooks/use-toast";
 import {AspectRatio} from "@radix-ui/react-aspect-ratio";
 import {useMutation} from "convex/react";
-import {EllipsisVertical, FileTextIcon, GanttChartIcon, ImageIcon, TrashIcon} from "lucide-react";
+import {
+	EllipsisVertical,
+	FileTextIcon,
+	GanttChartIcon,
+	ImageIcon,
+	StarIcon,
+	StarOff,
+	TrashIcon,
+} from "lucide-react";
 import Image from "next/image";
 import {ReactNode, useState} from "react";
-import {api} from "../../convex/_generated/api";
-import {Doc} from "../../convex/_generated/dataModel";
+import {api} from "../../../convex/_generated/api";
+import {Doc} from "../../../convex/_generated/dataModel";
+import {Button} from "../../components/ui/button";
 import {filesTypes} from "./FileList";
-import {Button} from "./ui/button";
 
 import {HoverCard, HoverCardContent, HoverCardTrigger} from "@/components/ui/hover-card";
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip";
@@ -35,6 +44,7 @@ import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/compon
 const FileCardAction = ({file}: {file: filesTypes}) => {
 	const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 	const deleteFile = useMutation(api.file.deleteFile);
+	const toggleFavorite = useMutation(api.file.toggleFavorite);
 	const toast = useToast();
 	return (
 		<>
@@ -42,10 +52,7 @@ const FileCardAction = ({file}: {file: filesTypes}) => {
 				<AlertDialogContent>
 					<AlertDialogHeader>
 						<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-						<AlertDialogDescription>
-							This action cannot be undone. This will permanently delete your account and remove
-							your data from our servers.
-						</AlertDialogDescription>
+						<AlertDialogDescription>This will move the file to the trash.</AlertDialogDescription>
 					</AlertDialogHeader>
 					<AlertDialogFooter>
 						<AlertDialogCancel>Cancel</AlertDialogCancel>
@@ -86,6 +93,20 @@ const FileCardAction = ({file}: {file: filesTypes}) => {
 							<TrashIcon className="size-4 relative -top-0.5" />
 						</DropdownMenuShortcut>
 					</DropdownMenuItem>
+					<DropdownMenuSeparator />
+					<DropdownMenuItem
+						onClick={() => {
+							toggleFavorite({fileId: file._id});
+						}}>
+						{file?.favorite ? "Unfavorite" : "Favorite"}
+						<DropdownMenuShortcut>
+							{file?.favorite ? (
+								<StarOff className="size-4 relative -top-0.5" />
+							) : (
+								<StarIcon className="size-4 relative -top-0.5" />
+							)}
+						</DropdownMenuShortcut>
+					</DropdownMenuItem>
 				</DropdownMenuContent>
 			</DropdownMenu>
 		</>
@@ -102,7 +123,7 @@ export function FileCard(file: filesTypes) {
 	console.log("file", file.url);
 	return (
 		<Card>
-			<CardHeader className="relative">
+			<CardHeader className="relative px-2 pb-2">
 				<div className=" absolute top-2 right-2">
 					<FileCardAction file={file} />
 				</div>
@@ -120,7 +141,7 @@ export function FileCard(file: filesTypes) {
 					</TooltipProvider>
 				</CardTitle>
 			</CardHeader>
-			<CardContent>
+			<CardContent className="p-2">
 				<div className="w-full h-50% flex ">
 					{file.type === "image" && (
 						<AspectRatio ratio={16 / 9}>
@@ -170,7 +191,7 @@ export function FileCard(file: filesTypes) {
 					)}
 				</div>
 			</CardContent>
-			<CardFooter>
+			<CardFooter className="p-2">
 				<Button
 					className="mx-auto"
 					onClick={() => {

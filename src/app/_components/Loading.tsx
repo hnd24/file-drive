@@ -11,7 +11,7 @@ export const Loading = ({
 	return (
 		<div className={cn("flex flex-col gap-4 w-full items-center text-black ", className)}>
 			<div className="animate-pulse ease-linear">
-				<Loader2 className="size-32 animate-spin " />
+				<Loader2 className="size-28 animate-spin " />
 			</div>
 			<div className="text-2xl font-bold ">{content}</div>
 		</div>

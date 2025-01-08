@@ -28,8 +28,8 @@ import {Loader2} from "lucide-react";
 import {useState} from "react";
 import {useForm} from "react-hook-form";
 import {z} from "zod";
-import {api} from "../../convex/_generated/api";
-import {types} from "../constant/typesFile";
+import {api} from "../../../convex/_generated/api";
+import {types} from "../../constant/typesFile";
 
 const formSchema = z.object({
 	title: z.string().min(1, "Title is required"),
@@ -108,7 +108,7 @@ export default function UploadButton() {
 									control={form.control}
 									name="title"
 									render={({field}) => (
-										<FormItem>
+										<FormItem className="flex flex-col items-start">
 											<FormLabel>Your title file</FormLabel>
 											<FormControl>
 												<Input placeholder="younger chicken" {...field} />
@@ -122,10 +122,15 @@ export default function UploadButton() {
 									control={form.control}
 									name="files"
 									render={() => (
-										<FormItem>
+										<FormItem className="flex flex-col items-start">
 											<FormLabel>Your file</FormLabel>
 											<FormControl>
-												<Input type="file" multiple {...fileRef} />
+												<Input
+													accept="image/jpeg,image/png,image/gif,application/pdf,text/csv,image/svg+xml"
+													type="file"
+													multiple
+													{...fileRef}
+												/>
 											</FormControl>
 											<FormDescription />
 											<FormMessage />

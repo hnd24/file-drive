@@ -206,8 +206,10 @@ export const toggleFavorite = mutation({
 				userId: access.user._id,
 				orgId: access.file.orgId,
 			});
+			await ctx.db.patch(access.file._id, {favorite: true});
 		} else {
 			await ctx.db.delete(favorite._id);
+			await ctx.db.patch(access.file._id, {favorite: false});
 		}
 	},
 });
@@ -220,13 +222,13 @@ export const getAllFavorites = query({
 		if (!hasAccess) {
 			return [];
 		}
-
 		const favorites = await ctx.db
 			.query("favorites")
 			.withIndex("by_userId_orgId_fileId", q =>
 				q.eq("userId", hasAccess.user._id).eq("orgId", args.orgId),
 			)
 			.collect();
+			
 
 		return favorites;
 	},
