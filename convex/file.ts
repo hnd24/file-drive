@@ -157,10 +157,10 @@ export const deleteFile = mutation({
 
 		assertCanDeleteFile(access.user, access.file);
 
-		await Promise.all([ctx.storage.delete(access.file.fileId), ctx.db.delete(access.file._id)]);
-		// await ctx.db.patch(args.fileId, {
-		// 	shouldDelete: true,
-		// });
+		// await Promise.all([ctx.storage.delete(access.file.fileId), ctx.db.delete(access.file._id)]);
+		await ctx.db.patch(args.fileId, {
+			shouldDelete: true,
+		});
 	},
 });
 
@@ -228,7 +228,6 @@ export const getAllFavorites = query({
 				q.eq("userId", hasAccess.user._id).eq("orgId", args.orgId),
 			)
 			.collect();
-			
 
 		return favorites;
 	},

@@ -18,8 +18,7 @@ export default function FilesPage() {
 
 	const orgId = organization?.id;
 	const files = useQuery(api.file.getFiles, orgId ? {orgId, query} : "skip");
-	console.log("orgId", orgId);
-	console.log("files", files);
+
 	const isLoading = files === undefined;
 	return (
 		<div className="w-full">

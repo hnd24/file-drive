@@ -23,6 +23,7 @@ import {useToast} from "@/hooks/use-toast";
 import {AspectRatio} from "@radix-ui/react-aspect-ratio";
 import {useMutation} from "convex/react";
 import {
+	ArchiveRestore,
 	EllipsisVertical,
 	FileTextIcon,
 	GanttChartIcon,
@@ -32,7 +33,7 @@ import {
 	TrashIcon,
 } from "lucide-react";
 import Image from "next/image";
-import {ReactNode, useState} from "react";
+import {ReactNode, Suspense, useState} from "react";
 import {api} from "../../../convex/_generated/api";
 import {Doc} from "../../../convex/_generated/dataModel";
 import {Button} from "../../components/ui/button";
@@ -40,12 +41,16 @@ import {filesTypes} from "./FileList";
 
 import {HoverCard, HoverCardContent, HoverCardTrigger} from "@/components/ui/hover-card";
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip";
+import {Protect} from "@clerk/nextjs";
+import ImageFallback from "./ImageFallback";
 
 const FileCardAction = ({file}: {file: filesTypes}) => {
 	const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 	const deleteFile = useMutation(api.file.deleteFile);
 	const toggleFavorite = useMutation(api.file.toggleFavorite);
+	const restoreFile = useMutation(api.file.restoreFile);
 	const toast = useToast();
+
 	return (
 		<>
 			<AlertDialog open={isConfirmOpen} onOpenChange={setIsConfirmOpen}>
@@ -86,15 +91,6 @@ const FileCardAction = ({file}: {file: filesTypes}) => {
 				</DropdownMenuTrigger>
 				<DropdownMenuContent>
 					<DropdownMenuItem
-						className=" text-red-600 cursor-pointer"
-						onClick={() => setIsConfirmOpen(true)}>
-						Delete
-						<DropdownMenuShortcut>
-							<TrashIcon className="size-4 relative -top-0.5" />
-						</DropdownMenuShortcut>
-					</DropdownMenuItem>
-					<DropdownMenuSeparator />
-					<DropdownMenuItem
 						onClick={() => {
 							toggleFavorite({fileId: file._id});
 						}}>
@@ -107,6 +103,32 @@ const FileCardAction = ({file}: {file: filesTypes}) => {
 							)}
 						</DropdownMenuShortcut>
 					</DropdownMenuItem>
+					<Protect role="org:admin">
+						<DropdownMenuSeparator />
+						<>
+							{file?.shouldDelete ? (
+								<DropdownMenuItem
+									className=" text-green-600 cursor-pointer"
+									onClick={() => {
+										restoreFile({fileId: file._id});
+									}}>
+									Restore
+									<DropdownMenuShortcut>
+										<ArchiveRestore className="size-4 relative -top-0.5" />
+									</DropdownMenuShortcut>
+								</DropdownMenuItem>
+							) : (
+								<DropdownMenuItem
+									className=" text-red-600 cursor-pointer"
+									onClick={() => setIsConfirmOpen(true)}>
+									Delete
+									<DropdownMenuShortcut>
+										<TrashIcon className="size-4 relative -top-0.5" />
+									</DropdownMenuShortcut>
+								</DropdownMenuItem>
+							)}
+						</>
+					</Protect>
 				</DropdownMenuContent>
 			</DropdownMenu>
 		</>
@@ -120,7 +142,6 @@ export const typesIcon = {
 } as Record<Doc<"files">["type"], ReactNode>;
 
 export function FileCard(file: filesTypes) {
-	console.log("file", file.url);
 	return (
 		<Card>
 			<CardHeader className="relative px-2 pb-2">
@@ -147,13 +168,20 @@ export function FileCard(file: filesTypes) {
 						<AspectRatio ratio={16 / 9}>
 							<HoverCard>
 								<HoverCardTrigger>
-									<Image
-										width={200}
-										height={100}
-										alt={file.name}
-										src={file.url || "/default.png"}
-										className="object-cover rounded-sm h-full w-full"
-									/>
+									<Suspense
+										fallback={
+											<div className="flex items-center justify-center w-full h-full">
+												<ImageFallback />
+											</div>
+										}>
+										<Image
+											width={200}
+											height={100}
+											alt={file.name}
+											src={file.url || "/default.png"}
+											className="object-cover rounded-sm h-full w-full"
+										/>
+									</Suspense>
 								</HoverCardTrigger>
 								<HoverCardContent className="p-0" side="right" align="center">
 									<Image

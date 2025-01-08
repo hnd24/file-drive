@@ -17,8 +17,8 @@ export default function NoOrganization() {
 						<Button size="lg">Create organization</Button>
 					</DialogTrigger>
 					<DialogContent className="p-0 bg-transparent border-none max-w-[480px]">
-						<DialogTitle />.
-						<CreateOrganization />
+						<DialogTitle />
+						<CreateOrganization afterCreateOrganizationUrl={"/files"} />
 					</DialogContent>
 				</Dialog>
 			</div>

@@ -11,14 +11,13 @@ import NoOrganization from "@/components/NoOrganization";
 import {useState} from "react";
 import {api} from "../../../../convex/_generated/api";
 
-export default function FilesPage() {
+export default function FavoritePage() {
 	const {organization} = useOrganization();
 	const [query, setQuery] = useState("");
 
 	const orgId = organization?.id;
 	const files = useQuery(api.file.getFiles, orgId ? {orgId, query, favorites: true} : "skip");
-	console.log("orgId", orgId);
-	console.log("files", files);
+
 	const isLoading = files === undefined;
 	return (
 		<div className="w-full">
@@ -34,7 +33,7 @@ export default function FilesPage() {
 
 					<SearchBar className="w-full md:px-0" setQuery={setQuery} />
 					{isLoading && <Loading className={"mt-40"} content="Loading your file ...!" />}
-					{files && files.length === 0 && <FileEmpty favorites />}
+					{files && files.length === 0 && <FileEmpty type="favorites" />}
 					{files && <FileList files={files} />}
 				</div>
 			)}

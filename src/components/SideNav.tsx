@@ -1,7 +1,8 @@
 "use client";
 
 import {Tabs, TabsList, TabsTrigger} from "@/components/ui/tabs";
-import {FileIcon, StarIcon} from "lucide-react";
+import {Protect} from "@clerk/nextjs";
+import {FileIcon, StarIcon, TrashIcon} from "lucide-react";
 import Link from "next/link";
 import {usePathname} from "next/navigation";
 
@@ -23,6 +24,14 @@ export default function SideNav() {
 							<span className="flex flex-col justify-center">Favorites</span>
 						</Link>
 					</TabsTrigger>
+					<Protect role="org:admin">
+						<TabsTrigger value="/trash">
+							<Link href={"/trash"} className="flex gap-2">
+								<TrashIcon className="size-5" />
+								<span className="flex flex-col justify-center">Trash</span>
+							</Link>
+						</TabsTrigger>
+					</Protect>
 				</TabsList>
 			</Tabs>
 		</div>
