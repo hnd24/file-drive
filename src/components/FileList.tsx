@@ -13,7 +13,7 @@ export default function FileList({files}: {files: filesTypes[]}) {
 	return (
 		<>
 			{files && files.length === 0 && (
-				<div className="flex flex-col gap-8 justify-center items-center mt-24">
+				<div className="flex flex-col gap-8 justify-center items-center mt-12">
 					<Image src="/empty.svg" alt="No files" width={300} height={300} />
 					<h1 className="font-semibold text-3xl flex text-center">You have no files, upload now</h1>
 					<UploadButton />

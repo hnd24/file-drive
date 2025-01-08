@@ -29,6 +29,7 @@ import {Doc} from "../../convex/_generated/dataModel";
 import {filesTypes} from "./FileList";
 import {Button} from "./ui/button";
 
+import {HoverCard, HoverCardContent, HoverCardTrigger} from "@/components/ui/hover-card";
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip";
 
 const FileCardAction = ({file}: {file: filesTypes}) => {
@@ -123,20 +124,33 @@ export function FileCard(file: filesTypes) {
 				<div className="w-full h-50% flex ">
 					{file.type === "image" && (
 						<AspectRatio ratio={16 / 9}>
-							<Image
-								width={200}
-								height={100}
-								alt={file.name}
-								src={file.url || "/default.png"}
-								className="object-cover rounded-sm h-full w-full"
-							/>
+							<HoverCard>
+								<HoverCardTrigger>
+									<Image
+										width={200}
+										height={100}
+										alt={file.name}
+										src={file.url || "/default.png"}
+										className="object-cover rounded-sm h-full w-full"
+									/>
+								</HoverCardTrigger>
+								<HoverCardContent className="p-0" side="right" align="center">
+									<Image
+										width={200}
+										height={100}
+										alt={file.name}
+										src={file.url || "/default.png"}
+										className="object-cover rounded-sm h-full w-full"
+									/>
+								</HoverCardContent>
+							</HoverCard>
 						</AspectRatio>
 					)}
 					{file.type === "pdf" && (
 						<AspectRatio ratio={16 / 9} className="flex items-center justify-center">
 							<Image
-								width={200}
-								height={100}
+								width={100}
+								height={50}
 								alt={file.name}
 								src={"PDF.svg"}
 								className="object-cover rounded-sm h-full w-full"

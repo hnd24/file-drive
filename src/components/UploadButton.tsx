@@ -30,6 +30,7 @@ import {useForm} from "react-hook-form";
 import {z} from "zod";
 import {api} from "../../convex/_generated/api";
 import {types} from "../constant/typesFile";
+
 const formSchema = z.object({
 	title: z.string().min(1, "Title is required"),
 	files: z
