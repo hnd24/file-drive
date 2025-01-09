@@ -28,8 +28,7 @@ import {Loader2} from "lucide-react";
 import {useState} from "react";
 import {useForm} from "react-hook-form";
 import {z} from "zod";
-import {api} from "../../../convex/_generated/api";
-import {types} from "../../constant/typesFile";
+import {api} from "../../../../convex/_generated/api";
 
 const formSchema = z.object({
 	title: z.string().min(1, "Title is required"),
@@ -69,7 +68,7 @@ export default function UploadButton() {
 					name: values.title,
 					fileId: storageId,
 					orgId: organization?.id ?? "",
-					type: types[file.type],
+					type: file.type.startsWith("image/") ? "image" : "file",
 				});
 			}
 			setIsFileDialog(false);
@@ -126,7 +125,7 @@ export default function UploadButton() {
 											<FormLabel>Your file</FormLabel>
 											<FormControl>
 												<Input
-													accept="image/jpeg,image/png,image/gif,application/pdf,text/csv,image/svg+xml"
+													accept="image/*, .pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx"
 													type="file"
 													multiple
 													{...fileRef}

@@ -1,4 +1,5 @@
-import SideNav from "@/components/SideNav";
+import Header from "@/components/Header";
+import {Toaster} from "@/components/ui/toaster";
 import {Metadata} from "next";
 
 export const metadata: Metadata = {
@@ -13,10 +14,11 @@ export default function DashBoardLayout({
 }>) {
 	return (
 		<div className="container mx-auto w-full px-4">
-			<div className="pt-4 flex flex-col items-center w-full">
-				<SideNav />
-			</div>
-			{children}
+			<>
+				<Header />
+				{children}
+				<Toaster />
+			</>
 		</div>
 	);
 }

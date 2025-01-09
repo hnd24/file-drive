@@ -1,48 +1,14 @@
 "use client";
 
-import {Protect, useOrganization} from "@clerk/nextjs";
-import {useQuery} from "convex/react";
+import {Protect} from "@clerk/nextjs";
 
-import FileEmpty from "@/app/_components/FileEmpty";
-import FileList from "@/app/_components/FileList";
-import {Loading} from "@/app/_components/Loading";
-import SearchBar from "@/app/_components/SearchBar";
-import NoOrganization from "@/components/NoOrganization";
+import DefaultPage from "@/app/(dashboard)/_components/PageDefault";
 import NoPermission from "@/components/NoPermission";
-import {useState} from "react";
-import {api} from "../../../../convex/_generated/api";
 
 export default function TrashPage() {
-	const {organization} = useOrganization();
-	const [query, setQuery] = useState("");
-
-	const orgId = organization?.id;
-	const files = useQuery(api.file.getFiles, orgId ? {orgId, query, deletedOnly: true} : "skip");
-
-	const isLoading = files === undefined;
 	return (
 		<Protect role="org:admin" fallback={<NoPermission />}>
-			<div className="w-full">
-				{!organization ? (
-					<NoOrganization />
-				) : (
-					<div className="flex flex-col items-center  pt-4 container gap-4 mx-auto lg:px-4">
-						<div className="flex justify-between items-center w-full md:px-0">
-							<div className="text-2xl font-bold cursor-pointer" onClick={() => setQuery("")}>
-								Your trash
-							</div>
-						</div>
-
-						<SearchBar className="w-full md:px-0" setQuery={setQuery} />
-						<div className="flex justify-start w-full">
-							Your files will be permanently deleted on the first day of every month at 8:00 AM PST.
-						</div>
-						{isLoading && <Loading className={"mt-40"} content="Loading your file ...!" />}
-						{files && files.length === 0 && <FileEmpty type="trash" />}
-						{files && <FileList files={files} />}
-					</div>
-				)}
-			</div>
+			<DefaultPage type="trash" />
 		</Protect>
 	);
 }

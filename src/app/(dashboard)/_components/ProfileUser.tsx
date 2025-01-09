@@ -23,7 +23,7 @@ export default function ProfileUser({name, imageURL, timeCreate}: ProfileUserPro
 					<AvatarFallback>CN</AvatarFallback>
 				</Avatar>
 				<div className="flex flex-col">
-					<p className="font-semibold">{name}</p>lg
+					<p className="font-semibold">{name}</p>
 					<p>{formatRelative(subDays(new Date(timeCreate), 3), new Date())}</p>
 				</div>
 			</HoverCardContent>

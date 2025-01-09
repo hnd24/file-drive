@@ -1,6 +1,6 @@
 "use client";
 
-import {Doc} from "../../../convex/_generated/dataModel";
+import {Doc} from "../../../../convex/_generated/dataModel";
 import {FileCard} from "./FileCard";
 
 export type filesTypes = Doc<"files"> & {
