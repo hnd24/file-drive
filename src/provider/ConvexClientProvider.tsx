@@ -21,7 +21,7 @@ const queryClient = new QueryClient({
 convexQueryClient.connect(queryClient);
 export function ConvexClientProvider({children}: {children: ReactNode}) {
 	return (
-		<ClerkProvider publishableKey={clerkPk}>
+		<ClerkProvider publishableKey={clerkPk} afterSignOutUrl={"/sign-in"}>
 			<ConvexProviderWithClerk client={convex} useAuth={useAuth}>
 				<QueryClientProvider client={queryClient}>
 					<>{children}</>
