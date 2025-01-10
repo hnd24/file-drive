@@ -1,5 +1,6 @@
 "use client";
-import {ClerkProvider, useAuth} from "@clerk/nextjs";
+import Loading from "@/app/loading";
+import {ClerkLoaded, ClerkLoading, ClerkProvider, useAuth} from "@clerk/nextjs";
 import {ConvexQueryClient} from "@convex-dev/react-query";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 import {ReactQueryDevtools} from "@tanstack/react-query-devtools";
@@ -24,10 +25,10 @@ export function ConvexClientProvider({children}: {children: ReactNode}) {
 		<ClerkProvider publishableKey={clerkPk} afterSignOutUrl={"/sign-in"}>
 			<ConvexProviderWithClerk client={convex} useAuth={useAuth}>
 				<QueryClientProvider client={queryClient}>
-					<>{children}</>
-					{/* <AuthLoading>
+					<ClerkLoaded>{children}</ClerkLoaded>
+					<ClerkLoading>
 						<Loading />
-					</AuthLoading> */}
+					</ClerkLoading>
 					<ReactQueryDevtools initialIsOpen={false} />
 				</QueryClientProvider>
 			</ConvexProviderWithClerk>

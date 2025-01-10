@@ -3,33 +3,36 @@
 import {Tabs, TabsList, TabsTrigger} from "@/components/ui/tabs";
 import {Protect} from "@clerk/nextjs";
 import {FileIcon, StarIcon, TrashIcon} from "lucide-react";
-import Link from "next/link";
-import {usePathname} from "next/navigation";
 
-export default function SideNav() {
-	const pathName = usePathname();
+export default function SideNav({
+	selectedTab,
+	setSelectedTab,
+}: {
+	selectedTab: string;
+	setSelectedTab: (value: string) => void;
+}) {
 	return (
 		<div>
-			<Tabs defaultValue={pathName}>
+			<Tabs value={selectedTab} onValueChange={setSelectedTab}>
 				<TabsList>
-					<TabsTrigger value="/files">
-						<Link href={"/files"} className="flex gap-2">
+					<TabsTrigger value="/">
+						<div className="flex gap-2">
 							<FileIcon className="size-5" />
 							<span className="flex flex-col justify-center">All files</span>
-						</Link>
+						</div>
 					</TabsTrigger>
 					<TabsTrigger value="/favorites">
-						<Link href={"/favorites"} className="flex gap-2">
+						<div className="flex gap-2">
 							<StarIcon className="size-5" />
 							<span className="flex flex-col justify-center">Favorites</span>
-						</Link>
+						</div>
 					</TabsTrigger>
 					<Protect role="org:admin">
 						<TabsTrigger value="/trash">
-							<Link href={"/trash"} className="flex gap-2">
+							<div className="flex gap-2">
 								<TrashIcon className="size-5" />
 								<span className="flex flex-col justify-center">Trash</span>
-							</Link>
+							</div>
 						</TabsTrigger>
 					</Protect>
 				</TabsList>

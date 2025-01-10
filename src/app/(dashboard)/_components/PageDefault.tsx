@@ -4,6 +4,7 @@ import FileEmpty from "@/app/(dashboard)/_components/FileEmpty";
 import FileList from "@/app/(dashboard)/_components/FileList";
 import {Loading} from "@/app/(dashboard)/_components/Loading";
 import SearchBar from "@/app/(dashboard)/_components/SearchBar";
+import SideNav from "@/app/(dashboard)/_components/SideNav";
 import UploadButton from "@/app/(dashboard)/_components/UploadButton";
 import Error from "@/app/error";
 import NoOrganization from "@/components/NoOrganization";
@@ -19,7 +20,8 @@ import {useOrganization} from "@clerk/nextjs";
 import {convexQuery} from "@convex-dev/react-query";
 import {useQuery} from "@tanstack/react-query";
 import {Grid2x2Check} from "lucide-react";
-import {useState} from "react";
+import {usePathname, useRouter} from "next/navigation";
+import {useEffect, useState} from "react";
 import {api} from "../../../../convex/_generated/api";
 import {DataTable} from "./FileTable";
 import {columns} from "./columns";
@@ -30,11 +32,17 @@ type Props = {
 export default function DefaultPage({type = "files"}: Props) {
 	const [isGird, setIsGird] = useState(false);
 	const [typeFile, setTypeFile] = useState<"file" | "image" | "all">("all");
-
 	const {organization} = useOrganization();
 	const [query, setQuery] = useState("");
-
+	const pathName = usePathname();
+	const [selectedTab, setSelectedTab] = useState(pathName);
 	const orgId = organization?.id;
+	const router = useRouter();
+	useEffect(() => {
+		router.push(selectedTab);
+		setSelectedTab(selectedTab);
+	}, [selectedTab]);
+
 	const queryOptions = orgId
 		? {
 				orgId,
@@ -53,6 +61,7 @@ export default function DefaultPage({type = "files"}: Props) {
 				<NoOrganization />
 			) : (
 				<div className="flex flex-col items-center  pt-4 container gap-4 mx-auto lg:px-4">
+					<SideNav selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
 					<div className="flex justify-between items-center w-full md:px-0">
 						<div className="text-2xl font-bold cursor-pointer" onClick={() => setQuery("")}>
 							Your files
@@ -66,7 +75,7 @@ export default function DefaultPage({type = "files"}: Props) {
 						<SearchBar className="w-full px-3 md:px-0" setQuery={setQuery} />
 					</div>
 					{files && files.length === 0 && <FileEmpty type={type} />}
-					{isPending && <Loading className={"mt-40"} content="Loading your file ...!" />}
+					{isPending && <Loading className={"mt-28"} content="Loading your file ...!" />}
 					<div className="flex justify-end w-full">
 						{files && files.length > 0 && (
 							<Select

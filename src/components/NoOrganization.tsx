@@ -18,7 +18,7 @@ export default function NoOrganization() {
 					</DialogTrigger>
 					<DialogContent className="p-0 bg-transparent border-none max-w-[480px]">
 						<DialogTitle />
-						<CreateOrganization afterCreateOrganizationUrl={"/files"} />
+						<CreateOrganization afterCreateOrganizationUrl={"/"} />
 					</DialogContent>
 				</Dialog>
 			</div>

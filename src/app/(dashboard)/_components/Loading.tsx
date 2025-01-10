@@ -9,7 +9,11 @@ export const Loading = ({
 	className?: String;
 }) => {
 	return (
-		<div className={cn("flex flex-col gap-4 w-full items-center text-black ", className)}>
+		<div
+			className={cn(
+				"flex flex-col gap-4 h-full w-full items-center justify-center text-black ",
+				className,
+			)}>
 			<div className="animate-pulse ease-linear">
 				<Loader2 className="size-28 animate-spin " />
 			</div>
