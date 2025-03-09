@@ -1,6 +1,6 @@
 # File Drive
 
-File Drive is a powerful file storage and sharing platform designed for teams. It allows users to store files, images, and collaborate seamlessly within organizations.
+File Drive is a powerful file storage and sharing website designed for teams. It allows users to store files, images, and collaborate seamlessly within organizations.
 
 ## 🚀 Features
 
